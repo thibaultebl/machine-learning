@@ -5,54 +5,61 @@ public class Operations{
         this.dataset = dataset;
     }
 
-    public double[] meanOperation(){
-        double[] mean = new double[dataset[0].length];
+    public double meanOperation4x(){
+        double mean = 0;
         double sum = 0;
-        for(int i = 0; i < dataset[0].length; i++){
-            for(int j = 0; j < dataset.length; j++){
-                sum += dataset[j][i];
-            }
-            mean[i] = sum/dataset.length;
-            sum = 0;
+        for(int i = 0; i < dataset.length; i++){
+                sum += dataset[i][0];
         }
+        mean = sum/dataset.length;
         return mean;
     }
-    public double[] deviationOperation(){
-        double[] deviation = new double[dataset[0].length-1];
-        double sdSum = 0;
-        double[] mean = meanOperation();
-
-        for(int i = 0; i < dataset[0].length-1; i++){
-            for(int j = 0; j < dataset.length; j++){
-                sdSum += Math.pow(dataset[j][i] - mean[i], 2);
-            }
-            deviation[i] = Math.sqrt(sdSum/(dataset.length-1)); // -1 as Bessel's corrections
-            sdSum = 0;
+    public double meanOperation4y(){
+        double mean = 0;
+        double sum = 0;
+        for(int i = 0; i < dataset.length; i++){
+            sum += dataset[i][4];
         }
+        mean = sum/dataset.length;
+        return mean;
+    }
+    public double deviationOperation(){
+        double deviation = 0;
+        double sdSum = 0;
+        double mean = meanOperation4x();
+        for(int i = 0; i < dataset.length; i++){
+                sdSum += Math.pow(dataset[i][0] - mean, 2);
+        }
+        deviation = Math.sqrt(sdSum/(dataset.length-1)); // Bessel's correction
         return deviation;
     }
-    public double[] covarianceOperation(){
-        double[] covariance = new double[dataset[0].length-1];
+    public double covarianceOperation(){
+        double covariance = 0;
         double cosum = 0;
-        double[] mean = meanOperation();
-        for(int i = 0; i < dataset[0].length-1; i++){
-            for(int j = 0; j < dataset.length; j++){
-                cosum += (dataset[j][i] - mean[i]) * (dataset[j][dataset[0].length-1] - mean[dataset[0].length-1]);
-            }
-            covariance[i] = cosum/(dataset.length-1);
-            cosum = 0;
+        double meanX = meanOperation4x();
+        double meanY = meanOperation4y();
+        for(int i = 0; i < dataset.length; i++){
+                cosum += (dataset[i][0] - meanX) * (dataset[i][4] - meanY);
         }
+        covariance = cosum/(dataset.length-1); // Bessel's correciton
         return covariance;
     }
 
-    public double[] mOperations(){
-        double[] mOperation = new double[dataset[0].length-1];
-        double[] covariance = covarianceOperation();
-        double[] sd = deviationOperation();
-        for(int i = 0; i < dataset[0].length-1; i++){
-                mOperation[i] = covariance[i]/(sd[i]*sd[i]);
-        }
+    public double mOperations(){
+        double mOperation = 0;
+        double covariance = covarianceOperation();
+        double sd = deviationOperation();
+        mOperation = covariance/(sd*sd);
         return mOperation;
+    }
+    public double bOperations(){
+        double meanx = meanOperation4x();
+        double meany = meanOperation4y();
+        double m = mOperations();
+        double b = 0;
+        double sum = 0;
+        b = meany - (m*meanx);
+        return b;
     }
 
 
