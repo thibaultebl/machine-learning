@@ -10,8 +10,7 @@ public class Main {
         double[][] test = split.getTestData(dataset);
 
         LinearRegression lr = new LinearRegression(training);
-        System.out.println(lr.getLinearRegression(0.4051));
-
-
+        double[] x = {2.5954000000000006, 167.85, 0.0, 0.0};
+        System.out.println(lr.getLinearRegression(x));
     }
 }

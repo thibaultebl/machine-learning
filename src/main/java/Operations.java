@@ -1,71 +1,61 @@
+import org.apache.commons.math3.linear.*;
+
 public class Operations{
     public double[][] trainingSet;
 
     public Operations(double[][] trainingSet){
         this.trainingSet = trainingSet;
     }
-
-    public double meanOperation4x(){
-        double mean = 0;
-        double sum = 0;
-        for(int i = 0; i < trainingSet.length; i++){
-                sum += trainingSet[i][0];
+    public double[][] separationX(){
+        double[][] X = new double[trainingSet.length][trainingSet[0].length];
+        for(int i = 0; i < X.length; i++){
+            X[i][0] = 1.0;
+            for(int j = 1; j < X[i].length; j++){
+                X[i][j] = trainingSet[i][j-1];
+            }
         }
-        mean = sum/trainingSet.length;
-        return mean;
+        return X;
     }
-    public double meanOperation4y(){
-        double mean = 0;
-        double sum = 0;
-        for(int i = 0; i < trainingSet.length; i++){
-            sum += trainingSet[i][4];
+    public double[] separationY(){
+        double[] Y = new double[trainingSet.length];
+        for(int i = 0; i < Y.length; i++){
+            Y[i] = trainingSet[i][trainingSet[i].length-1];
         }
-        mean = sum/trainingSet.length;
-        return mean;
+        return Y;
     }
-    public double deviationOperation(){
-        double deviation = 0;
-        double sdSum = 0;
-        double mean = meanOperation4x();
-        for(int i = 0; i < trainingSet.length; i++){
-                sdSum += Math.pow(trainingSet[i][0] - mean, 2);
+
+    public double[] betaOperation() {
+        double[][] Xdata = separationX();
+        double[] ydata = separationY();
+        RealMatrix X = new Array2DRowRealMatrix(Xdata);
+        RealVector Y = new ArrayRealVector(ydata);
+        RealMatrix XtX = X.transpose().multiply(X);
+        DecompositionSolver solver;
+
+        try{
+            solver = new LUDecomposition(XtX).getSolver();
+        } catch (SingularMatrixException e){
+            throw new RuntimeException("matrix is singular",e);
         }
-        deviation = Math.sqrt(sdSum/(trainingSet.length-1)); // Bessel's correction
-        return deviation;
+
+        RealVector beta = solver.solve(X.transpose().operate(Y));
+        return beta.toArray();
+
+        /*Here is a more robust version regarding chatgpt, but the solving is more abstract and happen internally
+        *public double[] betaOperation() {
+        RealMatrix X = buildXMatrix();
+        RealVector Y = buildYVector();
+
+        // Use SVD for stability
+        DecompositionSolver solver = new SingularValueDecomposition(X).getSolver();
+        RealVector beta = solver.solve(Y);
+
+        return beta.toArray();
     }
-    public double covarianceOperation(){
-        double covariance = 0;
-        double cosum = 0;
-        double meanX = meanOperation4x();
-        double meanY = meanOperation4y();
-        for(int i = 0; i < trainingSet.length; i++){
-                cosum += (trainingSet[i][0] - meanX) * (trainingSet[i][4] - meanY);
-        }
-        covariance = cosum/(trainingSet.length-1); // Bessel's correciton
-        return covariance;
+        *
+        *
+        * */
     }
-
-    public double mOperations(){
-        double mOperation = 0;
-        double covariance = covarianceOperation();
-        double sd = deviationOperation();
-        mOperation = covariance/(sd*sd);
-        return mOperation;
-    }
-    public double bOperations(){
-        double meanx = meanOperation4x();
-        double meany = meanOperation4y();
-        double m = mOperations();
-        double b = 0;
-        double sum = 0;
-        b = meany - (m*meanx);
-        return b;
-    }
-
-
-
-
-
 
 
 }

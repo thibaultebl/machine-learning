@@ -1,14 +1,16 @@
 public class LinearRegression {
     public Operations operations;
-    public double m;
-    public double b;
+    public double[] beta;
+
     public LinearRegression(double[][] training) {
         this.operations = new Operations(training);
-        this.m = operations.mOperations();
-        this.b = operations.bOperations();
-
+        this.beta = operations.betaOperation();
     }
-    public double getLinearRegression(double x) {
-        return (m * x) + b;
+    public double getLinearRegression(double[] x) {
+        double y = beta[0];
+        for(int i = 0; i < x.length; i++) {
+            y += beta[i+1] * x[i];
+        }
+        return y;
     }
 }
