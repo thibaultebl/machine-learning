@@ -46,7 +46,10 @@ public class Main {
         double prediction = nn.predict(in)[0]; // index 0 since only one output neuron goes out, it is flexible for the future if many output predictions are wished.
         System.out.println(norm.denormalizeOutput(prediction));
 
-
+        // Things to improve :
+        // 1. use better random initialization (Xavier/He)
+        // 2. remove the tanh function for the output layer
+        // 3. Train longer with more neurons
 
 
         }
