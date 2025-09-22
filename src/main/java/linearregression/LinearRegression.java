@@ -1,3 +1,5 @@
+package linearregression;
+
 public class LinearRegression {
     public Operations operations;
     public double[] beta;

@@ -1,3 +1,5 @@
+package utils;
+
 public class DataSplit {
     public double[][] dataTraining;
     public double[][] dataTest;

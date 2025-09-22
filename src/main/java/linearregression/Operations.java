@@ -1,3 +1,5 @@
+package linearregression;
+
 import org.apache.commons.math3.linear.*;
 
 public class Operations{
