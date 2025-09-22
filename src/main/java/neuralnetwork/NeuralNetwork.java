@@ -1,15 +1,13 @@
 package neuralnetwork;
 
-import java.util.Arrays;
-
 public class NeuralNetwork {
 
     private Layer[] layers;
-    private float learningRate;
+    private double learningRate;
     StatUtil util;
 
 
-    public NeuralNetwork(int[] layerSizes, float learningRate) {
+    public NeuralNetwork(int[] layerSizes, double learningRate) {
         util = new StatUtil();
         layers = new Layer[layerSizes.length-1];
         for (int i = 0; i < layers.length; i++) {
@@ -18,18 +16,17 @@ public class NeuralNetwork {
         this.learningRate = learningRate;
     }
 
-
-    public float[] forward(float[] inputs) {
-        float[] outputs = inputs;
+    public double[] forward(double[] inputs) {
+        double[] outputs = inputs;
 
         for(Layer layer : layers) {
             outputs = layer.forward(outputs);
         }
         return outputs;
     }
-    public void backward(float[] expectedOutput) {
+    public void backward(double[] expectedOutput) {
         Layer outputLayer = layers[layers.length - 1];
-        float[] errors = new float[outputLayer.getNeurons().length];
+        double[] errors = new double[outputLayer.getNeurons().length];
 
         for(int i = 0; i < outputLayer.getNeurons().length; i++) {
             Neuron neuron = outputLayer.getNeurons()[i];
@@ -44,22 +41,22 @@ public class NeuralNetwork {
         for (int epoch = 0; epoch < epochs; epoch++) {
             for(TrainingData sample : dataset) {
 
-                float[] predicted = forward(sample.getInputs());
+                double[] predicted = forward(sample.getInputs());
 
                 backward(sample.getExpectedOutput());
             }
             if (epoch % 100 == 0) {
-                float totalLoss = 0;
+                double totalLoss = 0;
                 for (TrainingData sample : dataset) {
-                    float[] pred = forward(sample.getInputs());
+                    double[] pred = forward(sample.getInputs());
                     totalLoss += util.mse(pred, sample.getExpectedOutput());
                 }
                 System.out.println("Epoch " + epoch + " Loss: " + totalLoss / dataset.length);
             }
         }
     }
-    public float[] predict(float[] inputs) {
-        float[] outputs = inputs;
+    public double[] predict(double[] inputs) {
+        double[] outputs = inputs;
         for(Layer layer : layers) {
             outputs = layer.forward(outputs);
         }

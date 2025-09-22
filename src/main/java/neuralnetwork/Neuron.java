@@ -1,31 +1,30 @@
 package neuralnetwork;
 
 public class Neuron {
-    public float[] weights;
-    public float bias;
-    private float value;
+    public double[] weights;
+    public double bias;
+    private double value;
     private StatUtil util;
-    public float[] lastInputs;
+    public double[] lastInputs;
 
     public Neuron(int inputSize) {
         util = new StatUtil();
-        weights = new float[inputSize];
+        weights = new double[inputSize];
         for (int i = 0; i < inputSize; i++) {
-            weights[i] = util.randomWeight(inputSize);
+            weights[i] = util.randomWeight();
         }
-        bias = util.randomWeight(inputSize);
+        bias = util.randomWeight();
     }
-
-    public float activate(float sum) {
+    public double activate(double sum) {
         return util.tanh(sum);
     }
-    public float derivative(float x) {
+    public double derivative(double x) {
         return util.tanhDerivative(x);
     }
-    public float getValue() {
+    public double getValue() {
         return this.value;
     }
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }
