@@ -25,12 +25,13 @@ public class DataNorm {
 
             double sqSum = 0.0;
             for (int i = 0; i < rows; i++) sqSum += Math.pow(dataset[i][j] - mean, 2);
-            std = Math.sqrt(sqSum / rows);
+            std = Math.sqrt(sqSum / (rows-1));
 
             if (j == outputColIndex) {
                 outputMean = mean;
                 outputStd = std;
             }
+            if(std==0) std = 1e-8;
 
             for (int i = 0; i < rows; i++) {
                 normalized[i][j] = (dataset[i][j] - mean) / std;

@@ -43,20 +43,6 @@ public class Operations{
         RealVector beta = solver.solve(X.transpose().operate(Y));
         return beta.toArray();
 
-        /*Here is a more robust version regarding chatgpt, but the solving is more abstract and happen internally
-        *public double[] betaOperation() {
-        RealMatrix X = buildXMatrix();
-        RealVector Y = buildYVector();
-
-        // Use SVD for stability
-        DecompositionSolver solver = new SingularValueDecomposition(X).getSolver();
-        RealVector beta = solver.solve(Y);
-
-        return beta.toArray();
-    }
-        *
-        *
-        * */
     }
 
 
